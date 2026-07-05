@@ -22,10 +22,12 @@ class LiblzmaRecipe(Recipe):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
             env['AUTOPOINT'] = '/bin/true'  # skip autopoint (gettext not installed)
+            # Suppress gettext: remove po from SUBDIRS + create dummy Makefile
             shprint(sh.Command('mkdir'), '-p', 'build-aux', 'po', _env=env)
             shprint(sh.Command('touch'), 'build-aux/config.rpath', _env=env)
-            # Remove po from SUBDIRS to avoid gettext dependency
             shprint(sh.sed, '-i', '/^SUBDIRS/s/po//g', 'Makefile.am', _env=env)
+            with open('po/Makefile.in.in', 'w') as f:
+                f.write('all:\ninstall:\nclean:\n')
             shprint(sh.Command('autoreconf'), '-fi', _env=env)
             shprint(sh.Command('./configure'),
                     '--host=' + arch.command_prefix,
