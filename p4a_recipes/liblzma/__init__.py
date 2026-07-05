@@ -15,6 +15,9 @@ class LiblzmaRecipe(Recipe):
     built_libraries = {'liblzma.so': 'src/liblzma/.libs'}
     need_stl_shared = False
 
+    def get_library_includes(self, arch):
+        return ' -I' + join(self.get_build_dir(arch.arch), 'src', 'liblzma')
+
     def should_build(self, arch):
         return True
 
@@ -40,7 +43,6 @@ class LiblzmaRecipe(Recipe):
                     _env=env)
             shprint(sh.make, '-j' + str(cpu_count()), _env=env)
             self.install_libs(arch, join('src', 'liblzma', '.libs', 'liblzma.so'))
-            
 
 
 recipe = LiblzmaRecipe()
