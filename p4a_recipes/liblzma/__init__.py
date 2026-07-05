@@ -33,7 +33,7 @@ class LiblzmaRecipe(Recipe):
                     '--host=' + arch.command_prefix,
                     '--prefix=' + self.get_build_dir(arch.arch),
                     '--disable-nls',
-                    '--enable-static', '--disable-shared',
+                    '--enable-static', '--enable-shared',
                     '--disable-xz', '--disable-xzdec',
                     '--disable-lzmadec', '--disable-lzmainfo',
                     '--disable-lzma-links', '--disable-scripts',
