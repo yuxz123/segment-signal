@@ -5,6 +5,7 @@ Workflow now includes 'gettext' for autopoint.
 from pythonforandroid.recipe import Recipe
 from pythonforandroid.toolchain import shprint, current_directory
 from os.path import join
+from multiprocessing import cpu_count
 import sh
 
 
@@ -34,7 +35,7 @@ class LiblzmaRecipe(Recipe):
                     '--disable-lzmadec', '--disable-lzmainfo',
                     '--disable-lzma-links', '--disable-scripts',
                     _env=env)
-            shprint(sh.make, '-j' + str(self.ctx.num_cores), _env=env)
+            shprint(sh.make, '-j' + str(cpu_count()), _env=env)
             self.install_libs(arch, join('src', 'liblzma', '.libs', 'liblzma.so'))
             self.install_include_dir(arch, 'src/liblzma/', 'lzma')
 
