@@ -1,6 +1,6 @@
 """
 libffi v3.4.6 — fix autoconf issue on Ubuntu 24.04.
-Original v3.4.2 autogen.sh fails with LT_SYS_SYMBOL_USCORE error.
+The LT_SYS_SYMBOL_USCORE macro was removed in newer libtool.
 """
 from os.path import exists, join
 from multiprocessing import cpu_count
@@ -21,8 +21,9 @@ class LibffiRecipe(Recipe):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
             if not exists('configure'):
-                # Copy system libtool macros to fix LT_SYS_SYMBOL_USCORE
-                shprint(sh.Command('libtoolize'), '--force', '--copy', _env=env)
+                # Remove LT_SYS_SYMBOL_USCORE from configure.ac
+                # (this macro doesn't exist on Ubuntu 24.04's libtool)
+                shprint(sh.sed, '-i', '/LT_SYS_SYMBOL_USCORE/d', 'configure.ac', _env=env)
                 shprint(sh.Command('./autogen.sh'), _env=env)
             shprint(sh.Command('autoreconf'), '-vif', _env=env)
             shprint(sh.Command('./configure'),
