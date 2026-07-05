@@ -23,10 +23,8 @@ jobs:
         run: |
           sudo apt update -y
           sudo apt install -y \
-            autoconf libtool pkg-config \
-            zlib1g-dev libncurses5-dev libncursesw5-dev \
-            libtinfo5 cmake libffi-dev libssl-dev \
-            libltdl-dev \
+            zlib1g-dev libncurses-dev \
+            cmake libffi-dev libssl-dev \
             openjdk-17-jdk-headless \
             unzip zip lld
 
