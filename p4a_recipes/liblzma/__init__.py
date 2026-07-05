@@ -1,17 +1,16 @@
 """
-liblzma recipe — GitHub release mirror (bypasses blocked tukaani.org).
-Uses the release tarball which has pre-generated configure.
+liblzma recipe — GitHub source mirror (bypasses blocked tukaani.org).
+Workflow now includes 'gettext' for autopoint.
 """
 from pythonforandroid.recipe import Recipe
 from pythonforandroid.toolchain import shprint, current_directory
-from os.path import join, exists
+from os.path import join
 import sh
 
 
 class LiblzmaRecipe(Recipe):
     version = '5.2.4'
-    # GitHub release tarball (has configure pre-generated, no autoreconf needed)
-    url = 'https://github.com/xz-mirror/xz/releases/download/v{version}/xz-{version}.tar.gz'
+    url = 'https://github.com/xz-mirror/xz/archive/refs/tags/v{version}.tar.gz'
     built_libraries = {'liblzma.so': 'src/liblzma/.libs'}
     need_stl_shared = False
 
@@ -21,7 +20,7 @@ class LiblzmaRecipe(Recipe):
     def build_arch(self, arch):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
-            # Release tarball has configure — skip autoreconf
+            shprint(sh.Command('autoreconf'), '-fi', _env=env)
             shprint(sh.Command('./configure'),
                     '--host=' + arch.command_prefix,
                     '--prefix=' + arch.get_build_dir(),
