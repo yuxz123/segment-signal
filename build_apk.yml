@@ -1,0 +1,53 @@
+name: Build APK
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install system deps
+        run: |
+          sudo apt update -y -q
+          sudo apt install -y -q \
+            autoconf libtool pkg-config \
+            zlib1g-dev libncurses-dev \
+            cmake libffi-dev libssl-dev \
+            libltdl-dev \
+            openjdk-17-jdk-headless \
+            unzip zip lld
+
+      - name: Install Buildozer
+        run: pip install --upgrade buildozer Cython
+
+      - name: Cache Android SDK/NDK
+        uses: actions/cache@v4
+        with:
+          path: ~/.buildozer
+          key: buildozer-v2-${{ runner.os }}-${{ hashFiles('buildozer.spec') }}
+          restore-keys: buildozer-v2-${{ runner.os }}-
+
+      - name: Build APK
+        run: |
+          export BUILDOZER_WARN_ON_ROOT=0
+          buildozer android debug 2>&1
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: segmentsignal-debug-apk
+          path: bin/*.apk
+          retention-days: 30

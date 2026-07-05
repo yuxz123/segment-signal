@@ -30,6 +30,9 @@ warn_on_root = 1
 # android.keystore = 
 # android.keyalias = 
 
+# 本地 recipes（覆盖无法下载的源）
+p4a.local_recipes = p4a_recipes
+
 # ===== 国内加速设置 =====
 # 若 SDK 下载太慢，可手动下载后指定路径:
 # android.sdk_path = /path/to/your/android-sdk
