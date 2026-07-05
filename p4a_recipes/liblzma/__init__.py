@@ -18,6 +18,13 @@ class LiblzmaRecipe(Recipe):
     def get_library_includes(self, arch):
         return ' -I' + join(self.get_build_dir(arch.arch), 'src', 'liblzma')
 
+    def get_library_ldflags(self, arch):
+        return ' -L' + join(self.get_build_dir(arch.arch), 'src', 'liblzma', '.libs')
+
+    @staticmethod
+    def get_library_libs_flag():
+        return ' -llzma'
+
     def should_build(self, arch):
         return True
 
