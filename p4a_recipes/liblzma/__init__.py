@@ -1,14 +1,17 @@
+"""
+liblzma recipe — GitHub release mirror (bypasses blocked tukaani.org).
+Uses the release tarball which has pre-generated configure.
+"""
 from pythonforandroid.recipe import Recipe
 from pythonforandroid.toolchain import shprint, current_directory
-from os.path import join
+from os.path import join, exists
 import sh
 
 
 class LiblzmaRecipe(Recipe):
-    """Override: download xz from GitHub mirror instead of blocked tukaani.org"""
     version = '5.2.4'
-    # Use GitHub mirror instead of tukaani.org which is blocked in GitHub Actions
-    url = 'https://github.com/xz-mirror/xz/archive/refs/tags/v{version}.tar.gz'
+    # GitHub release tarball (has configure pre-generated, no autoreconf needed)
+    url = 'https://github.com/xz-mirror/xz/releases/download/v{version}/xz-{version}.tar.gz'
     built_libraries = {'liblzma.so': 'src/liblzma/.libs'}
     need_stl_shared = False
 
@@ -18,7 +21,7 @@ class LiblzmaRecipe(Recipe):
     def build_arch(self, arch):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
-            shprint(sh.Command('autoreconf'), '-fi', _env=env)
+            # Release tarball has configure — skip autoreconf
             shprint(sh.Command('./configure'),
                     '--host=' + arch.command_prefix,
                     '--prefix=' + arch.get_build_dir(),
