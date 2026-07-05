@@ -26,7 +26,7 @@ class LiblzmaRecipe(Recipe):
             shprint(sh.Command('autoreconf'), '-fi', _env=env)
             shprint(sh.Command('./configure'),
                     '--host=' + arch.command_prefix,
-                    '--prefix=' + arch.get_build_dir(),
+                    '--prefix=' + self.get_build_dir(arch.arch),
                     '--enable-static', '--disable-shared',
                     '--disable-xz', '--disable-xzdec',
                     '--disable-lzmadec', '--disable-lzmainfo',
