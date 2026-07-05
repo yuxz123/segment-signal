@@ -40,7 +40,7 @@ class LiblzmaRecipe(Recipe):
                     _env=env)
             shprint(sh.make, '-j' + str(cpu_count()), _env=env)
             self.install_libs(arch, join('src', 'liblzma', '.libs', 'liblzma.so'))
-            self.install_include_dir(arch, 'src/liblzma/', 'lzma')
+            
 
 
 recipe = LiblzmaRecipe()
