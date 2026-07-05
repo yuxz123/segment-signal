@@ -21,12 +21,14 @@ class LiblzmaRecipe(Recipe):
         env = self.get_recipe_env(arch)
         with current_directory(self.get_build_dir(arch.arch)):
             env['AUTOPOINT'] = '/bin/true'  # skip autopoint (gettext not installed)
-            shprint(sh.Command('mkdir'), '-p', 'build-aux', _env=env)
+            shprint(sh.Command('mkdir'), '-p', 'build-aux', 'po', _env=env)
             shprint(sh.Command('touch'), 'build-aux/config.rpath', _env=env)
+            shprint(sh.Command('touch'), 'po/Makefile.in.in', _env=env)
             shprint(sh.Command('autoreconf'), '-fi', _env=env)
             shprint(sh.Command('./configure'),
                     '--host=' + arch.command_prefix,
                     '--prefix=' + self.get_build_dir(arch.arch),
+                    '--disable-nls',
                     '--enable-static', '--disable-shared',
                     '--disable-xz', '--disable-xzdec',
                     '--disable-lzmadec', '--disable-lzmainfo',
