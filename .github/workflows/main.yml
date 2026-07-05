@@ -19,12 +19,14 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install system deps
+      -  name: Install system deps
         run: |
-          sudo apt update -y
-          sudo apt install -y \
+          sudo apt update -y -q
+          sudo apt install -y -q \
+            autoconf automake libtool pkg-config gettext \
             zlib1g-dev libncurses-dev \
             cmake libffi-dev libssl-dev \
+            libltdl-dev \
             openjdk-17-jdk-headless \
             unzip zip lld
 
