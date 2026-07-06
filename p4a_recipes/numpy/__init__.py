@@ -1,19 +1,22 @@
 """
 numpy recipe override — adds v prefix for git checkout.
-p4a's base download_file does git checkout {version}, but numpy tags are v1.26.4.
 """
+import os
+
 from pythonforandroid.recipes.numpy import NumpyRecipe as BaseNumpyRecipe
+from pythonforandroid.logger import shprint, info
+from pythonforandroid.util import current_directory
+import sh
 
 
 class NumpyRecipe(BaseNumpyRecipe):
     def download_file(self, url, filename):
-        # git tags have v prefix: temporarily patch version for checkout only
-        orig = self.version
-        self.version = 'v' + orig
-        try:
-            super().download_file(url, filename)
-        finally:
-            self.version = orig
+        if os.path.exists(filename):
+            info(f'{filename} already exists, skipping download')
+            return
+        shprint(sh.git, 'clone', '--recurse-submodules', url, filename)
+        with current_directory(filename):
+            shprint(sh.git, 'checkout', 'v' + self.version)
 
 
 recipe = NumpyRecipe()
