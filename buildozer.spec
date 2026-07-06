@@ -5,7 +5,7 @@ package.domain = org.example
 source.dir = .
 source.include_exts = py,png,jpg,kv,ttf
 version = 1.0
-requirements = python3,kivy==2.3.0,pandas==1.5.3,numpy==1.26.4,requests,openpyxl,android
+requirements = python3,kivy==2.3.0,pandas==1.5.3,numpy==v1.26.4,requests,openpyxl,android
 orientation = portrait
 fullscreen = 0
 
