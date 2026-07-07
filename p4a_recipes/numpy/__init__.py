@@ -1,15 +1,15 @@
 """
-numpy recipe override — adds v prefix for git checkout.
+numpy recipe override — git clone with v prefix + disable build isolation.
 """
 import os
 
-from pythonforandroid.recipes.numpy import NumpyRecipe as BaseNumpyRecipe
+from pythonforandroid.recipes.numpy import NumpyRecipe as Base
 from pythonforandroid.logger import shprint, info
 from pythonforandroid.util import current_directory
 import sh
 
 
-class NumpyRecipe(BaseNumpyRecipe):
+class NumpyRecipe(Base):
     def download_file(self, url, filename):
         if os.path.exists(filename):
             info(f'{filename} already exists, skipping download')
@@ -19,6 +19,11 @@ class NumpyRecipe(BaseNumpyRecipe):
         with current_directory(filename):
             shprint(sh.git, 'checkout', 'v' + self.version)
             shprint(sh.git, 'submodule', 'update', '--init', '--recursive')
+
+    def get_recipe_env(self, arch=None):
+        env = super().get_recipe_env(arch)
+        env['PIP_NO_BUILD_ISOLATION'] = '1'
+        return env
 
 
 recipe = NumpyRecipe()
