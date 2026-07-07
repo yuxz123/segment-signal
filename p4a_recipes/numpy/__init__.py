@@ -15,9 +15,10 @@ class NumpyRecipe(BaseNumpyRecipe):
             info(f'{filename} already exists, skipping download')
             return
         clean_url = url.replace('git+', '', 1)
-        shprint(sh.git, 'clone', '--recurse-submodules', clean_url, filename)
+        shprint(sh.git, 'clone', clean_url, filename)
         with current_directory(filename):
             shprint(sh.git, 'checkout', 'v' + self.version)
+            shprint(sh.git, 'submodule', 'update', '--init', '--recursive')
 
 
 recipe = NumpyRecipe()
