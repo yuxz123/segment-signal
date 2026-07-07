@@ -1,8 +1,5 @@
 """
 pandas recipe override — adds v prefix for git checkout.
-p4a's base download_file does git checkout {version}, but pandas tags are v1.5.3.
-Since version is a read-only property (data descriptor), we can't monkey-patch it
-even with object.__setattr__. Instead, we replicate the git download logic here.
 """
 import os
 
@@ -13,7 +10,6 @@ import sh
 
 
 class PandasRecipe(BasePandasRecipe):
-    # Skip fix_numpy_includes.patch — only needed for pandas >=2.x (meson build)
     patches = []
 
     def download_file(self, url, filename):
